@@ -1,95 +1,39 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from "react";
+import "bootstrap/dist/css/bootstrap.min.css";
 
-import  MovieList from './components/MovieList';
+import "./App.css";
+import MovieList from "./components/MovieList";
+import MovieHeader from './components/MovieHeader';
+import SearchBox from './components/SearchBox';
 
 function App() {
-  const [movies, setMovies] = useState([
-      {
-        Title: "Batman Begins",
-        Year: "2005",
-        imdbID: "tt0372784",
-        Type: "movie",
-        Poster:
-          "https://m.media-amazon.com/images/M/MV5BOTY4YjI2N2MtYmFlMC00ZjcyLTg3YjEtMDQyM2ZjYzQ5YWFkXkEyXkFqcGdeQXVyMTQxNzMzNDI@._V1_SX300.jpg",
-      },
-      {
-        Title: "Batman v Superman: Dawn of Justice",
-        Year: "2016",
-        imdbID: "tt2975590",
-        Type: "movie",
-        Poster:
-          "https://m.media-amazon.com/images/M/MV5BYThjYzcyYzItNTVjNy00NDk0LTgwMWQtYjMwNmNlNWJhMzMyXkEyXkFqcGdeQXVyMTQxNzMzNDI@._V1_SX300.jpg",
-      },
-      {
-        Title: "Batman",
-        Year: "1989",
-        imdbID: "tt0096895",
-        Type: "movie",
-        Poster:
-          "https://m.media-amazon.com/images/M/MV5BMTYwNjAyODIyMF5BMl5BanBnXkFtZTYwNDMwMDk2._V1_SX300.jpg",
-      },
-      {
-        Title: "Batman Returns",
-        Year: "1992",
-        imdbID: "tt0103776",
-        Type: "movie",
-        Poster:
-          "https://m.media-amazon.com/images/M/MV5BOGZmYzVkMmItM2NiOS00MDI3LWI4ZWQtMTg0YWZkODRkMmViXkEyXkFqcGdeQXVyODY0NzcxNw@@._V1_SX300.jpg",
-      },
-      {
-        Title: "Batman Forever",
-        Year: "1995",
-        imdbID: "tt0112462",
-        Type: "movie",
-        Poster:
-          "https://m.media-amazon.com/images/M/MV5BNDdjYmFiYWEtYzBhZS00YTZkLWFlODgtY2I5MDE0NzZmMDljXkEyXkFqcGdeQXVyMTMxODk2OTU@._V1_SX300.jpg",
-      },
-      {
-        Title: "Batman & Robin",
-        Year: "1997",
-        imdbID: "tt0118688",
-        Type: "movie",
-        Poster:
-          "https://m.media-amazon.com/images/M/MV5BMGQ5YTM1NmMtYmIxYy00N2VmLWJhZTYtN2EwYTY3MWFhOTczXkEyXkFqcGdeQXVyNTA2NTI0MTY@._V1_SX300.jpg",
-      },
-      {
-        Title: "The Lego Batman Movie",
-        Year: "2017",
-        imdbID: "tt4116284",
-        Type: "movie",
-        Poster:
-          "https://m.media-amazon.com/images/M/MV5BMTcyNTEyOTY0M15BMl5BanBnXkFtZTgwOTAyNzU3MDI@._V1_SX300.jpg",
-      },
-      {
-        Title: "Batman: The Animated Series",
-        Year: "1992–1995",
-        imdbID: "tt0103359",
-        Type: "series",
-        Poster:
-          "https://m.media-amazon.com/images/M/MV5BOTM3MTRkZjQtYjBkMy00YWE1LTkxOTQtNDQyNGY0YjYzNzAzXkEyXkFqcGdeQXVyOTgwMzk1MTA@._V1_SX300.jpg",
-      },
-      {
-        Title: "Batman: Under the Red Hood",
-        Year: "2010",
-        imdbID: "tt1569923",
-        Type: "movie",
-        Poster:
-          "https://m.media-amazon.com/images/M/MV5BNmY4ZDZjY2UtOWFiYy00MjhjLThmMjctOTQ2NjYxZGRjYmNlL2ltYWdlL2ltYWdlXkEyXkFqcGdeQXVyNTAyODkwOQ@@._V1_SX300.jpg",
-      },
-      {
-        Title: "Batman: The Dark Knight Returns, Part 1",
-        Year: "2012",
-        imdbID: "tt2313197",
-        Type: "movie",
-        Poster:
-          "https://m.media-amazon.com/images/M/MV5BMzIxMDkxNDM2M15BMl5BanBnXkFtZTcwMDA5ODY1OQ@@._V1_SX300.jpg",
-      },
-    ],
-  );
+  const [movies, setMovies] = useState([]);
+  const [searchMovie, setSearchMovie] = useState('');
 
+  const getMovies = async () =>{
+    const url = `http://www.omdbapi.com/?s=${searchMovie}&apikey=${process.env.REACT_APP_OMDB_API}`;
+    const response = await fetch(url);
+    const responseJSON = await response.json()
+    console.log(responseJSON);
+    
+    if(responseJSON.Search){
+      setMovies(responseJSON.Search);
+    }
+  }
+
+  //Run this when the page loads
+  useEffect(() => {
+    getMovies();
+  }, [searchMovie])
   return (
-    <div>
-      <MovieList movies={movies} />
+    <div className="container-fluid movie-app">
+      <div className="row d-flex align-items-center mt-4 mb-4">
+      <MovieHeader heading="Movies"/>
+      <SearchBox searchMovie={searchMovie} setSearchMovie={setSearchMovie}/>
+      </div>
+      <div className="row">
+        <MovieList movies={movies} />
+      </div>
     </div>
   );
 }
