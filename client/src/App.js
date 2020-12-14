@@ -14,11 +14,10 @@ function App() {
   const [searchMovie, setSearchMovie] = useState("");
 
   const getMovies = async (searchMovie) => {
-    const url = `http://www.omdbapi.com/?s=${searchMovie}&apikey=${process.env.REACT_APP_OMDB_API}`;
+    const url = `https://www.omdbapi.com/?s=${searchMovie}&apikey=${process.env.REACT_APP_OMDB_API}`;
     const response = await fetch(url);
     const responseJSON = await response.json();
    
-
     if (responseJSON.Search) {
       setMovies(responseJSON.Search);
     }
