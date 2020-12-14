@@ -13,7 +13,7 @@ function App() {
   const [favorites, setFavorites] = useState([]);
   const [searchMovie, setSearchMovie] = useState("");
 
-  const getMovies = async () => {
+  const getMovies = async (searchMovie) => {
     const url = `http://www.omdbapi.com/?s=${searchMovie}&apikey=${process.env.REACT_APP_OMDB_API}`;
     const response = await fetch(url);
     const responseJSON = await response.json();
@@ -26,7 +26,7 @@ function App() {
 
   //Run this when the page loads
   useEffect(() => {
-    getMovies();
+    getMovies(searchMovie);
   }, [searchMovie]);
 
   //Run Check to see if data is in local storage
@@ -38,10 +38,7 @@ function App() {
   const saveUserDataToLocal = (movieData) =>{
     localStorage.setItem('movie-data', JSON.stringify(movieData))
   };
-  // Remove All
-  const removeAllUserDataToLocal = () =>{
-    localStorage.removeItem('movie-data')
-  };
+
   const addFavoriteMovie = (movie) => {
     const newFavList = [...favorites, movie];
     setFavorites(newFavList);
